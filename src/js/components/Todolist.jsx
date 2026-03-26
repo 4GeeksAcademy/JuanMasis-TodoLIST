@@ -1,53 +1,65 @@
-import React, {useState} from "react";
-export const Todolist =()=>{
-//Creamos estados para actualizar las tareas y la lista
-    const [tarea, setTarea] = useState ("")
-    const [lista, setLista] = useState ([])
 
-//Esta funcion escucha el cambio dentro del input.
-    const agregar=(e)=>{
-        setTarea(e.target.value)
+import React, { useState } from "react";
+
+export const Todolist = () => {
+  const [tarea, setTarea] = useState("");
+  const [lista, setLista] = useState([]);
+
+  const agregar = (e) => {
+    setTarea(e.target.value);
+  };
+
+  const agregarALaLista = (e) => {
+    if (e.key === "Enter") {
+      if (tarea.trim() === "") {
+        return;
+      }
+
+      setLista([...lista, tarea]);
+      setTarea("");
     }
-// Esta funcion escucha la tecla ENTER y agrega la tarea a mi lista.
-    const agregarALaLista=(e)=>{
-        //Esto verifica se la tecla es ENTER.
-        if(e.key==="Enter"){
-            //Esto verifica que no se envie una tarea vacia.
-            if(tarea.trim()==""){
-                return
-            }
-            setLista ([...lista,tarea])
-            //Esto limpia el formulario.
-            setTarea("")
-        }
-    }
-    //El filtro es que muestra todos los elementos que no sean el que se le dio click a la x.
-    const eliminarTarea = (paranIndex) =>{
-        let elementos = lista.filter((iten, index)=>index !== paranIndex)
-        setLista(elementos)
-    }
-    return(
-        <>
-           <h1>To do List </h1>
-           <div class="input-group flex-nowrap">
-              <input type="text" class="form-control" placeholder="Agregar Tarea" aria-label="Username" 
-              aria-describedby="addon-wrapping" value={tarea} onChange={agregar} onKeyDown={agregarALaLista}/>
-           </div>
+  };
 
-           <ul>
-               {lista.map((iten, index)=>(
-               
-               <li key = {index}>{iten} <span onClick={() => eliminarTarea(index)}>x</span></li>
-               )
-               )
-               }
-               
-           </ul>
+  const eliminarTarea = (paramIndex) => {
+    let elementos = lista.filter((item, index) => index !== paramIndex);
+    setLista(elementos);
+  };
 
-           <p>{lista.length} iten left</p>
+  return (
+    <div className="todo-wrapper">
+      <h1 className="title">todos</h1>
 
-        </>
-    )
-}
+      <div className="todo-box">
+        <input
+          type="text"
+          className="todo-input"
+          placeholder="What needs to be done?"
+          value={tarea}
+          onChange={agregar}
+          onKeyDown={agregarALaLista}
+        />
 
+        <ul className="todo-list">
+          {lista.length === 0 ? (
+            <li className="empty-task">No hay tareas, añadir tareas</li>
+          ) : (
+            lista.map((item, index) => (
+              <li key={index} className="todo-item">
+                <span>{item}</span>
+                <span
+                  className="delete-btn"
+                  onClick={() => eliminarTarea(index)}
+                >
+                  x
+                </span>
+              </li>
+            ))
+          )}
+        </ul>
+
+        <p className="items-left">{lista.length} item left</p>
+      </div>
+    </div>
+  );
+};
 
